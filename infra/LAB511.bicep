@@ -10,7 +10,7 @@ param labUserObjectId string
 param resourcePrefix string = 'lab511'
 
 @description('The location where all resources will be deployed')
-param location string = 'eastus'
+param location string = 'westcentralus'
 
 @description('Storage account SKU')
 @allowed(['Standard_LRS', 'Standard_GRS', 'Standard_RAGRS', 'Standard_ZRS'])
