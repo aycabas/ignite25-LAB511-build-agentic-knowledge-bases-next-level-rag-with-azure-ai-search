@@ -331,7 +331,7 @@ resource userSearchContributorRoleAssignment 'Microsoft.Authorization/roleAssign
 }
 
 // Search Index Data Reader role for lab user
-resource userSearchIndexContributorRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+resource userSearchIndexReaderRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(subscription().id, resourceGroup().id, searchService.name, labUserObjectId, '1407120a-92aa-4202-b7e9-c0e197c71c8f')
   scope: searchService
   properties: {
@@ -340,6 +340,18 @@ resource userSearchIndexContributorRoleAssignment 'Microsoft.Authorization/roleA
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '1407120a-92aa-4202-b7e9-c0e197c71c8f')
   }
 }
+
+// Search Index Data Contributor role for lab user
+resource userSearchIndexDataContributorRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(subscription().id, resourceGroup().id, searchService.name, labUserObjectId, '8ebe5a00-799e-43f5-93ac-243d3dce84a7')
+  scope: searchService
+  properties: {
+    principalId: labUserObjectId
+    principalType: 'User'
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '8ebe5a00-799e-43f5-93ac-243d3dce84a7')
+  }
+}
+
 
 // Cognitive Services Contributor role for lab user
 resource userOpenAiContributorRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
