@@ -273,14 +273,14 @@ resource gpt41ModelDeployment 'Microsoft.CognitiveServices/accounts/deployments@
 // SERVICE PRINCIPAL ROLE ASSIGNMENTS
 // ===============================================
 
-// Storage Blob Data Contributor role for SP
-resource SPuserStorageContributorRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(uniqueSuffix, 'sp-storage-contributor') 
+// Storage Blob Data Reader role for SP
+resource SPuserStorageReaderRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(uniqueSuffix, 'sp-storage-reader') 
   scope: storageAccount
   properties: {
     principalId: searchService.identity.principalId
     principalType: 'ServicePrincipal'
-    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '2a2b9908-6ea1-4ae2-8e65-a410df84e7d1')
   }
 }
 
@@ -360,6 +360,17 @@ resource userAIServicesContributorRoleAssignment 'Microsoft.Authorization/roleAs
     principalId: labUserObjectId
     principalType: 'User'
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'eadc314b-1a2d-4efa-be10-5d325db5065e')
+  }
+}
+
+// Storage Blob Data Contributor role for lab user
+resource userStorageContributorRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(subscription().id, resourceGroup().id, storageAccount.name, labUserObjectId, 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')
+  scope: storageAccount
+  properties: {
+    principalId: labUserObjectId
+    principalType: 'User'
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')
   }
 }
 
