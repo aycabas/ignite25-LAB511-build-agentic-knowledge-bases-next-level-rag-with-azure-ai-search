@@ -24,6 +24,10 @@ param searchServiceSku string = 'standard'
 @allowed(['S0'])
 param openAiSku string = 'S0'
 
+@description('AI Services service SKU')
+@allowed(['S0'])
+param aiServicesSku string = 'S0'
+
 @description('Text embedding model name')
 @allowed(['text-embedding-3-large'])
 param embeddingModelName string = 'text-embedding-3-large'
@@ -36,27 +40,16 @@ param embeddingModelVersion string = '1'
 @maxValue(200)
 param embeddingModelCapacity int = 30
 
-@description('GPT-5 model name')
-param gpt5ModelName string = 'gpt-5'
+@description('GPT-4.1 model name')
+param gpt41ModelName string = 'gpt-4.1'
 
-@description('GPT-5 model version')
-param gpt5ModelVersion string = '2025-08-07'
+@description('GPT-4.1 model version')
+param gpt41ModelVersion string = '2025-04-14'
 
-@description('GPT-5 deployment capacity')
+@description('GPT-4.1 deployment capacity')
 @minValue(1)
 @maxValue(200)
-param gpt5Capacity int = 50
-
-@description('GPT-5 mini model name')
-param gpt5MiniModelName string = 'gpt-5-mini'
-
-@description('GPT-5 mini model version')
-param gpt5MiniModelVersion string = '2025-08-07'
-
-@description('GPT-5 mini deployment capacity')
-@minValue(1)
-@maxValue(200)
-param gpt5MiniCapacity int = 50
+param gpt41Capacity int = 50
 
 
 
@@ -67,9 +60,9 @@ var resourceNames = {
   searchService: '${resourcePrefix}-search-${uniqueSuffix}'
   searchIndex: '${resourcePrefix}-index'
   openAiService: '${resourcePrefix}-openai-${uniqueSuffix}'
+  aiServices: '${resourcePrefix}-ai-services-${uniqueSuffix}'
   embeddingDeployment: 'text-embedding-3-large'
-  gpt5Deployment: 'gpt-5'
-  gpt5MiniDeployment: 'gpt-5-mini'
+  gpt41Deployment: 'gpt-4.1'
 }
 
 // Ensure storage account name meets requirements (3-24 chars, lowercase alphanumeric)
@@ -88,6 +81,7 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2023-05-01' = {
   }
   kind: 'StorageV2'
   properties: {
+    isHnsEnabled: true
     defaultToOAuthAuthentication: true
     allowBlobPublicAccess: false
     allowSharedKeyAccess: true
@@ -124,7 +118,6 @@ resource blobService 'Microsoft.Storage/storageAccounts/blobServices@2023-05-01'
       enabled: true
       days: 7
     }
-    isVersioningEnabled: true
   }
 }
 
@@ -188,10 +181,34 @@ resource openAiService 'Microsoft.CognitiveServices/accounts@2023-10-01-preview'
   }
   kind: 'OpenAI'
   properties: {
-    apiProperties: {
-      statisticsEnabled: false
-    }
     customSubDomainName: resourceNames.openAiService
+    networkAcls: {
+      defaultAction: 'Allow'
+      virtualNetworkRules: []
+      ipRules: []
+    }
+    publicNetworkAccess: 'Enabled'
+    disableLocalAuth: false
+  }
+  identity: {
+    type: 'SystemAssigned'
+  }
+}
+
+// ===============================================
+// AI Services
+// ===============================================
+
+@description('AI Services for content understanding')
+resource aiServices 'Microsoft.CognitiveServices/accounts@2023-10-01-preview' = {
+  name: resourceNames.aiServices
+  location: 'swedencentral'
+  sku: {
+    name: aiServicesSku
+  }
+  kind: 'AIServices'
+  properties: {
+    customSubDomainName: resourceNames.aiServices
     networkAcls: {
       defaultAction: 'Allow'
       virtualNetworkRules: []
@@ -225,55 +242,27 @@ resource embeddingModelDeployment 'Microsoft.CognitiveServices/accounts/deployme
     name: 'Standard'
     capacity: embeddingModelCapacity
   }
-  dependsOn: [
-    openAiService
-  ]
 }
 
 // ===============================================
-// GPT-5 MODEL DEPLOYMENT
+// GPT-4.1 MODEL DEPLOYMENT
 // ===============================================
 
-//@description('GPT-5 model deployment for chat and reasoning')
-//resource gpt5ModelDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-10-01-preview' = {
-//  parent: openAiService
-//  name: resourceNames.gpt5Deployment
-//  properties: {
-//    model: {
-//      format: 'OpenAI'
-//      name: gpt5ModelName
-//      version: gpt5ModelVersion
-//    }
-//    raiPolicyName: 'Microsoft.Default'
-//  }
-//  sku: {
-//    name: 'GlobalStandard'
-//    capacity: gpt5Capacity
-//  }
-//  dependsOn: [
-//    openAiService
-//  ]
-//}
-
-// ===============================================
-// GPT-5 MINI MODEL DEPLOYMENT
-// ===============================================
-
-@description('GPT-5 mini model deployment for lightweight chat tasks')
-resource gpt5MiniModelDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-10-01-preview' = {
+@description('GPT-4.1 model deployment for agentic retrieval')
+resource gpt41ModelDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-10-01-preview' = {
   parent: openAiService
-  name: resourceNames.gpt5MiniDeployment
+  name: resourceNames.gpt41Deployment
   properties: {
     model: {
       format: 'OpenAI'
-      name: gpt5MiniModelName
-      version: gpt5MiniModelVersion
+      name: gpt41ModelName
+      version: gpt41ModelVersion
     }
     raiPolicyName: 'Microsoft.Default'
   }
   sku: {
     name: 'GlobalStandard'
-    capacity: gpt5MiniCapacity
+    capacity: gpt41Capacity
   }
   dependsOn: [
     embeddingModelDeployment
@@ -284,14 +273,14 @@ resource gpt5MiniModelDeployment 'Microsoft.CognitiveServices/accounts/deploymen
 // SERVICE PRINCIPAL ROLE ASSIGNMENTS
 // ===============================================
 
-// Storage Blob Data Contributor role for SP
-resource SPuserStorageContributorRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(uniqueSuffix, 'sp-storage-contributor') 
+// Storage Blob Data Reader role for SP
+resource SPuserStorageReaderRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(uniqueSuffix, 'sp-storage-reader') 
   scope: storageAccount
   properties: {
     principalId: searchService.identity.principalId
     principalType: 'ServicePrincipal'
-    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '2a2b9908-6ea1-4ae2-8e65-a410df84e7d1')
   }
 }
 
@@ -313,6 +302,16 @@ resource searchServiceToOpenAIRoleAssignment 'Microsoft.Authorization/roleAssign
     principalId: searchService.identity.principalId
     principalType: 'ServicePrincipal'
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd')
+  }
+}
+
+// Azure AI User role for AI Search MI (subscription scope)
+resource searchServiceToAIUserRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(subscription().id, searchService.name, '53ca6127-db72-4b80-b1b0-d745d6d5456d')
+  properties: {
+    principalId: searchService.identity.principalId
+    principalType: 'ServicePrincipal'
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '53ca6127-db72-4b80-b1b0-d745d6d5456d')
   }
 }
 
@@ -353,14 +352,25 @@ resource userOpenAiContributorRoleAssignment 'Microsoft.Authorization/roleAssign
   }
 }
 
-// Cognitive Services User
-resource CogsUserRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(subscription().id, resourceGroup().id, searchService.name, labUserObjectId, 'a97b65f3-24c7-4388-baec-2e87135dc908')
-  scope: searchService
+// Azure AI Project Manager role for lab user
+resource userAIServicesContributorRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(subscription().id, resourceGroup().id, aiServices.name, labUserObjectId, 'eadc314b-1a2d-4efa-be10-5d325db5065e')
+  scope: aiServices
   properties: {
     principalId: labUserObjectId
     principalType: 'User'
-    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'a97b65f3-24c7-4388-baec-2e87135dc908')
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'eadc314b-1a2d-4efa-be10-5d325db5065e')
+  }
+}
+
+// Storage Blob Data Contributor role for lab user
+resource userStorageContributorRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(subscription().id, resourceGroup().id, storageAccount.name, labUserObjectId, 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')
+  scope: storageAccount
+  properties: {
+    principalId: labUserObjectId
+    principalType: 'User'
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')
   }
 }
 
@@ -389,6 +399,12 @@ output openAiServiceName string = openAiService.name
 @description('OpenAI service endpoint')
 output openAiServiceEndpoint string = openAiService.properties.endpoint
 
+@description('AI Services name')
+output aiServicesName string = aiServices.name
+
+@description('AI Services endpoint')
+output aiServicesEndpoint string = aiServices.properties.endpoints['Content Understanding']
+
 @description('Text embedding model deployment name')
 output embeddingDeploymentName string = embeddingModelDeployment.name
 
@@ -398,11 +414,8 @@ output resourceGroupLocation string = location
 @description('Unique suffix used for resource naming')
 output uniqueSuffix string = uniqueSuffix
 
-//@description('GPT-5 model deployment name')
-//output gpt5DeploymentName string = gpt5ModelDeployment.name
-
-@description('GPT-5 mini model deployment name')
-output gpt5MiniDeploymentName string = gpt5MiniModelDeployment.name
+@description('Model deployment name')
+output chatDeploymentName string = gpt41ModelDeployment.name
 
 @description('Lab user object ID')
 output labUserObjectId string = labUserObjectId

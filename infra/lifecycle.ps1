@@ -60,8 +60,9 @@ $searchName             = $outs.searchServiceName.value
 $searchEndpoint         = $outs.searchServiceEndpoint.value
 $openaiName             = $outs.openAiServiceName.value
 $openaiEndpoint         = $outs.openAiServiceEndpoint.value
+$aiServicesEndpoint     = $outs.aiServicesEndpoint.value
 $embeddingDeployment    = $outs.embeddingDeploymentName.value
-$chatDeployment         = $outs.gpt5MiniDeploymentName.value
+$chatDeployment         = $outs.chatDeploymentName.value
 
 # ===============================
 # Fetch secrets (kept out of deployment history)
@@ -93,6 +94,7 @@ powershell -ExecutionPolicy Bypass -File $setupLocal `
   -SearchAdminKey $searchAdminKey `
   -OpenAIEndpoint $openaiEndpoint `
   -OpenAIKey $openaiKey `
+  -AIServicesEndpoint $aiServicesEndpoint `
   -BlobConnectionString $blobConnectionString `
   -BlobContainerName $containerName `
   -EmbeddingDeployment $embeddingDeployment `
