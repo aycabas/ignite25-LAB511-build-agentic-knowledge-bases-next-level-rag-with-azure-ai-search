@@ -161,7 +161,7 @@ resource searchService 'Microsoft.Search/searchServices@2023-11-01' = {
         aadAuthFailureMode: 'http401WithBearerChallenge'
       }
     }
-    semanticSearch: 'free'
+    semanticSearch: 'standard'
   }
   identity: {
     type: 'SystemAssigned'
