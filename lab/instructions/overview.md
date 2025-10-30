@@ -67,7 +67,7 @@ All required Azure services including **Azure AI Search with pre-indexed data** 
 - **Azure AI Search** - Standard tier with two pre-created indexes:
   - **hrdocs (50 documents):** HR policies, employee handbook, role library, company overview
   - **healthdocs (334 documents):** Health insurance plans, benefits options, coverage details
-- **Azure OpenAI** - Deployed models **gpt-5-mini** for chat completion and answer synthesis and **text-embedding-3-large** for vector embeddings
+- **Azure OpenAI** - Deployed models **gpt-4.1** for chat completion and answer synthesis and **text-embedding-3-large** for vector embeddings
 - **Pre-computed vectors** - All 384 documents are already vectorized and indexed
 
 #### Verify Environment Variables
