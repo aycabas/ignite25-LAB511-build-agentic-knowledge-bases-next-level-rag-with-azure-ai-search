@@ -7,7 +7,7 @@ param(
   [Parameter(Mandatory=$true)][string]$BlobConnectionString,
   [string]$BlobContainerName = "documents",
   [string]$EmbeddingDeployment = "text-embedding-3-large",
-  [string]$ChatDeployment = "gpt-5-mini",
+  [string]$ChatDeployment = "gpt-4.1",
   [string]$KnowledgeAgentName = "knowledge-base",
   [ValidateSet("true","false")][string]$UseVerbalization = "false"
 )
@@ -30,7 +30,7 @@ AZURE_OPENAI_KEY=$OpenAIKey
 AZURE_OPENAI_EMBEDDING_DEPLOYMENT=$EmbeddingDeployment
 AZURE_OPENAI_EMBEDDING_MODEL_NAME=text-embedding-3-large
 AZURE_OPENAI_CHATGPT_DEPLOYMENT=$ChatDeployment
-AZURE_OPENAI_CHATGPT_MODEL_NAME=gpt-5-mini
+AZURE_OPENAI_CHATGPT_MODEL_NAME=gpt-4.1
 AI_SERVICES_ENDPOINT=$AIServicesEndpoint
 AZURE_SEARCH_KNOWLEDGE_AGENT=$KnowledgeAgentName
 USE_VERBALIZATION=$UseVerbalization
