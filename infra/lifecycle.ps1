@@ -61,6 +61,7 @@ $searchEndpoint         = $outs.searchServiceEndpoint.value
 $openaiName             = $outs.openAiServiceName.value
 $openaiEndpoint         = $outs.openAiServiceEndpoint.value
 $aiServicesEndpoint     = $outs.aiServicesEndpoint.value
+$multiAiServicesEndpoint = $outs.multiAiServicesEndpoint.value
 $embeddingDeployment    = $outs.embeddingDeploymentName.value
 $chatDeployment         = $outs.chatDeploymentName.value
 
@@ -95,6 +96,7 @@ powershell -ExecutionPolicy Bypass -File $setupLocal `
   -OpenAIEndpoint $openaiEndpoint `
   -OpenAIKey $openaiKey `
   -AIServicesEndpoint $aiServicesEndpoint `
+  -MultiAIServicesEndpoint $multiAiServicesEndpoint `
   -BlobConnectionString $blobConnectionString `
   -BlobContainerName $containerName `
   -EmbeddingDeployment $embeddingDeployment `

@@ -28,6 +28,10 @@ param openAiSku string = 'S0'
 @allowed(['S0'])
 param aiServicesSku string = 'S0'
 
+@description('Multi AI Services service SKU')
+@allowed(['S0'])
+param multiAiServicesSku string = 'S0'
+
 @description('Text embedding model name')
 @allowed(['text-embedding-3-large'])
 param embeddingModelName string = 'text-embedding-3-large'
@@ -61,6 +65,7 @@ var resourceNames = {
   searchIndex: '${resourcePrefix}-index'
   openAiService: '${resourcePrefix}-openai-${uniqueSuffix}'
   aiServices: '${resourcePrefix}-ai-services-${uniqueSuffix}'
+  multiAiServices: '${resourcePrefix}-multi-ai-${uniqueSuffix}'
   embeddingDeployment: 'text-embedding-3-large'
   gpt41Deployment: 'gpt-4.1'
 }
@@ -223,6 +228,34 @@ resource aiServices 'Microsoft.CognitiveServices/accounts@2023-10-01-preview' = 
 }
 
 // ===============================================
+// Multi AI Services
+// ===============================================
+
+@description('AI Services for multiple services')
+resource multiAIServices 'Microsoft.CognitiveServices/accounts@2023-10-01-preview' = {
+  name: resourceNames.multiAiServices
+  location: 'swedencentral'
+  sku: {
+    name: multiAiServicesSku
+  }
+  kind: 'CognitiveServices'
+  properties: {
+    customSubDomainName: resourceNames.multiAiServices
+    networkAcls: {
+      defaultAction: 'Allow'
+      virtualNetworkRules: []
+      ipRules: []
+    }
+    publicNetworkAccess: 'Enabled'
+    disableLocalAuth: false
+  }
+  identity: {
+    type: 'SystemAssigned'
+  }
+}
+
+
+// ===============================================
 // TEXT EMBEDDING MODEL DEPLOYMENT
 // ===============================================
 
@@ -315,6 +348,16 @@ resource searchServiceToAIUserRoleAssignment 'Microsoft.Authorization/roleAssign
   }
 }
 
+// Cognitive Services User role for AI Search MI (subscription scope)
+resource searchServiceToCognitiveServicesUserRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(subscription().id, searchService.name, 'a97b65f3-24c7-4388-baec-2e87135dc908')
+  properties: {
+    principalId: searchService.identity.principalId
+    principalType: 'ServicePrincipal'
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'a97b65f3-24c7-4388-baec-2e87135dc908')
+  }
+}
+
 // ===============================================
 // LAB USER ROLE ASSIGNMENTS
 // ===============================================
@@ -357,6 +400,17 @@ resource userSearchIndexDataContributorRoleAssignment 'Microsoft.Authorization/r
 resource userOpenAiContributorRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(subscription().id, resourceGroup().id, openAiService.name, labUserObjectId, '25fbc0a9-bd7c-42a3-aa1a-3b75d497ee68')
   scope: openAiService
+  properties: {
+    principalId: labUserObjectId
+    principalType: 'User'
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '25fbc0a9-bd7c-42a3-aa1a-3b75d497ee68')
+  }
+}
+
+// Cognitive Services Contributor role for lab user
+resource userMultiAIServicesContributorRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(subscription().id, resourceGroup().id, multiAIServices.name, labUserObjectId, '25fbc0a9-bd7c-42a3-aa1a-3b75d497ee68')
+  scope: multiAIServices
   properties: {
     principalId: labUserObjectId
     principalType: 'User'
@@ -416,6 +470,9 @@ output aiServicesName string = aiServices.name
 
 @description('AI Services endpoint')
 output aiServicesEndpoint string = aiServices.properties.endpoints['Content Understanding']
+
+@description('Multi AI Services endpoint')
+output multiAiServicesEndpoint string = multiAIServices.properties.endpoint
 
 @description('Text embedding model deployment name')
 output embeddingDeploymentName string = embeddingModelDeployment.name
