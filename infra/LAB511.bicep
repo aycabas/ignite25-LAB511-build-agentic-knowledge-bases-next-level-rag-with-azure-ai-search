@@ -375,14 +375,14 @@ resource userAIServicesContributorRoleAssignment 'Microsoft.Authorization/roleAs
   }
 }
 
-// Storage Blob Data Contributor role for lab user
-resource userStorageContributorRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(subscription().id, resourceGroup().id, storageAccount.name, labUserObjectId, 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')
+// Storage Blob Data Owner role for lab user
+resource userStorageOwnerRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(subscription().id, resourceGroup().id, storageAccount.name, labUserObjectId, 'b7e6dc6d-f1e8-4753-8033-0f276bb0955b')
   scope: storageAccount
   properties: {
     principalId: labUserObjectId
     principalType: 'User'
-    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b7e6dc6d-f1e8-4753-8033-0f276bb0955b')
   }
 }
 
