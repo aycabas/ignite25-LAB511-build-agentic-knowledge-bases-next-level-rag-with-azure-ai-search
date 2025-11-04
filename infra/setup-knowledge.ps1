@@ -4,7 +4,7 @@ param(
   [Parameter(Mandatory=$true)][string]$OpenAIEndpoint,
   [Parameter(Mandatory=$true)][string]$OpenAIKey,
   [Parameter(Mandatory=$true)][string]$AIServicesEndpoint,
-  [Parameter(Mandatory=$true)][string]$MultiAIServicesEndpoint,
+  [Parameter(Mandatory=$true)][string]$AIServicesKey,
   [Parameter(Mandatory=$true)][string]$BlobConnectionString,
   [string]$BlobContainerName = "documents",
   [string]$EmbeddingDeployment = "text-embedding-3-large",
@@ -33,7 +33,7 @@ AZURE_OPENAI_EMBEDDING_MODEL_NAME=text-embedding-3-large
 AZURE_OPENAI_CHATGPT_DEPLOYMENT=$ChatDeployment
 AZURE_OPENAI_CHATGPT_MODEL_NAME=gpt-4.1
 AI_SERVICES_ENDPOINT=$AIServicesEndpoint
-MULTI_AI_SERVICES_ENDPOINT=$MultiAIServicesEndpoint
+AI_SERVICES_KEY=$AIServicesKey
 AZURE_SEARCH_KNOWLEDGE_AGENT=$KnowledgeAgentName
 USE_VERBALIZATION=$UseVerbalization
 "@

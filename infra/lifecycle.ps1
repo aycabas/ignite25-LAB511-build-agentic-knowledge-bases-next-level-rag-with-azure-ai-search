@@ -60,8 +60,8 @@ $searchName             = $outs.searchServiceName.value
 $searchEndpoint         = $outs.searchServiceEndpoint.value
 $openaiName             = $outs.openAiServiceName.value
 $openaiEndpoint         = $outs.openAiServiceEndpoint.value
+$aiServicesName         = $outs.aiServicesName.value
 $aiServicesEndpoint     = $outs.aiServicesEndpoint.value
-$multiAiServicesEndpoint = $outs.multiAiServicesEndpoint.value
 $embeddingDeployment    = $outs.embeddingDeploymentName.value
 $chatDeployment         = $outs.chatDeploymentName.value
 
@@ -72,8 +72,10 @@ $searchAdminKey = az rest --method POST `
   --url "https://management.azure.com/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.Search/searchServices/$searchName/listAdminKeys?api-version=2023-11-01" `
   --query primaryKey -o tsv
 
+
 $blobConnectionString = az storage account show-connection-string -n $storageName -g $resourceGroupName -o tsv
 $openaiKey            = az cognitiveservices account keys list -g $resourceGroupName -n $openaiName --query key1 -o tsv
+$aiServicesKey        = az cognitiveservices account keys list -g $resourceGroupName -n $aiServicesName --query key1 -o tsv
 
 # ===============================
 # Run setup with output values
@@ -96,7 +98,7 @@ powershell -ExecutionPolicy Bypass -File $setupLocal `
   -OpenAIEndpoint $openaiEndpoint `
   -OpenAIKey $openaiKey `
   -AIServicesEndpoint $aiServicesEndpoint `
-  -MultiAIServicesEndpoint $multiAiServicesEndpoint `
+  -AIServicesKey $aiServicesKey `
   -BlobConnectionString $blobConnectionString `
   -BlobContainerName $containerName `
   -EmbeddingDeployment $embeddingDeployment `
