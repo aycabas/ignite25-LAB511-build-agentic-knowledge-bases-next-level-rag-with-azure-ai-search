@@ -1,15 +1,10 @@
 # Summary
 
-**Congratulations! 🎉** You’ve just completed the journey of building an Agentic Knowledge Base that plans, reasons, and responds over enterprise data. By following the guided notebook, you brought together everything needed to power real-world copilots and enterprise assistants.
+You've completed the lab on building agentic knowledge bases with Azure AI Search. Through 8 progressive notebooks, you explored how retrieval becomes intelligent when guided by a large language model that can plan searches, select sources, and generate grounded responses.
 
-This lab wasn’t just about running code, it was about understanding how retrieval becomes *intelligent* when guided by a large language model. You explored how an agent can search across diverse data, make decisions about what to use, and deliver grounded, explainable responses that users can trust.
+## What You Explored
 
-## What You’ve Accomplished
-
-- Built an **Agentic Knowledge Base** capable of orchestrating complex retrieval workflows end-to-end.  
-- Connected to and retrieved from **multiple data sources** in a unified way.  
-- Used **LLM-driven reasoning** to guide retrieval decisions and generate high-quality, citation-backed answers.  
-- Experienced how **agentic behavior** — planning, adapting, and iterating — elevates RAG beyond simple search.
+In this lab, you worked with different knowledge base configurations and learned how agentic retrieval differs from traditional search. You connected to multiple data sources, experimented with retrieval strategies, and saw how answer synthesis generates citation-backed responses. You also explored how reasoning effort levels affect performance and accuracy.
 
 ## Continue Learning
 
@@ -21,11 +16,22 @@ This lab wasn’t just about running code, it was about understanding how retrie
 
 ## Next Steps
 
-Ready to apply what you've learned? Here are some ways to extend this lab:
+Here are some ways to apply what you've learned:
 
-- **Add more knowledge sources** - Connect additional search indexes or data sources to expand your knowledge base
-- **Customize the agent configuration** - Experiment with different retrieval strategies, reranking thresholds, or output modalities
-- **Build an agent UI** - Create a chat interface that uses your knowledge agent as the backend
-- **Integrate with your data** - Replace the sample indexes with your own enterprise data
+**Expand your knowledge base** - Connect additional search indexes, SharePoint sites, or web sources to broaden what your system can query.
 
-✅ **That’s a wrap!** You now have a working Knowledge Base and a deeper understanding of how retrieval is evolving. Use what you’ve learned here as a foundation and keep exploring how agentic intelligence can power the next generation of enterprise AI solutions.
+**Customize retrieval behavior** - Adjust reasoning effort levels, configure custom instructions for specific sources, or experiment with different reranking thresholds.
+
+**Integrate with your data** - Replace the sample HR and health insurance indexes with your own enterprise content.
+
+**Build a user interface** - Create a chat interface or API that uses your knowledge base to answer user questions.
+
+The patterns you explored in this lab form the foundation for building custom copilots, enterprise assistants, and intelligent knowledge applications. You can use these same techniques with your own data to create systems that don't just search, but reason over information and provide explainable, trustworthy answers.
+
+## Share Your Feedback
+
+Your feedback helps us improve our labs for future events. Please take a moment to share your experience:
+
+**Ignite Feedback:** [https://aka.ms/ignite25-feedback](https://aka.ms/ignite25-feedback)
+
+**Lab Content Feedback:** [https://aka.ms/ignite25-LAB511](https://aka.ms/ignite25-LAB511)
