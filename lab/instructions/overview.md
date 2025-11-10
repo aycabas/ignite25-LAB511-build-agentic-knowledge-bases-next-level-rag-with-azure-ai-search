@@ -18,21 +18,15 @@ If you need to sign in to any Azure or Microsoft 365 apps, use the following cre
 
 ## Overview
 
-In this hands-on lab, you will design and implement a **Knowledge Base** that can retrieve, reason, and respond over enterprise data using **agentic retrieval** in Azure AI Search.
+In this hands-on lab, you'll build a knowledge base that can retrieve, reason, and respond over enterprise data using agentic retrieval in Azure AI Search.
 
-Unlike traditional search or basic RAG (Retrieval-Augmented Generation), an Agentic Knowledge Base doesn’t just return documents, it plans how and where to search, chooses the most relevant knowledge sources, and uses an LLM to synthesize grounded, citation-backed responses tailored to the user’s intent. This agentic approach transforms retrieval into a dynamic, adaptive process capable of delivering deeper insights, more relevant answers, and higher-quality results.
+Unlike traditional search or basic RAG systems that simply return documents, an agentic knowledge base plans how and where to search, chooses the most relevant knowledge sources, and synthesizes grounded, citation-backed responses tailored to the user's intent. This transforms retrieval into a dynamic, adaptive process that delivers deeper insights and more relevant answers.
 
-By the end of this lab, you’ll have built an Agentic Knowledge Base that provides context-aware, accurate, and explainable responses over enterprise data, forming a foundation you can extend into custom copilots, enterprise assistants, and intelligent knowledge applications.
+By the end of this lab, you'll understand how agentic retrieval works and have hands-on experience with different knowledge base configurations and optimization strategies.
 
-### Learning Objectives
+### What You'll Learn
 
-By completing this lab, you will be able to:
-
-- Design and build a **Knowledge Base** that uses agentic retrieval to retrieve, reason, and respond over enterprise data.  
-- Implement **smart source selection** to intelligently connect and query multiple indexes and data sources.  
-- Enhance **query planning** with natural language instructions and retrieval guidance.  
-- Generate **grounded, citation-backed responses** using answer synthesis or extractive techniques.  
-- Optimize **retrieval strategies** with configurable effort levels and iterative refinement.
+In this lab, you'll work with agentic retrieval patterns to build knowledge bases that can intelligently query multiple data sources, plan retrieval strategies, and generate grounded responses with citations. You'll also learn how to optimize retrieval performance by adjusting reasoning effort levels.
 
 ## Getting Started
 
@@ -47,17 +41,16 @@ In the virtual machine, sign into Windows using the following credentials:
 
 ### Access the Lab Repository
 
-Once signed in to the Skillable environment, you’ll find the lab repository already cloned on your desktop under the folder: **Desktop > ignite25-LAB511-build-agentic-knowledge-bases-next-level-rag-with-azure-ai-search-main**.
+Once signed in to the Skillable environment, you’ll find the lab repository already cloned on your desktop under the folder: **Desktop > ignite25-lab511-private-dev**.
 
 > This folder contains all the code, notebooks, and resources you’ll need for the lab.
 
 ### Open the Project Folder in Visual Studio Code
 
-Open Visual Studio Code and select **File > Open Folder**. Then navigate to Desktop and select the **ignite25-LAB511-build-agentic-knowledge-bases-next-level-rag-with-azure-ai-search-main** folder and then **Select Folder**.
+Open Visual Studio Code and select **File > Open Folder**. Then navigate to Desktop and select the **ignite25-lab511-private-dev** folder and then **Select Folder**.
 
 > [!TIP]
 > * When prompted whether to trust the authors of the files, select **Yes, I trust the authors**.
-> * You may see pop-up message in VS Code **Dev Container prompt**. This appears when you first open the app folder. Select **Don’t Show Again** or close it, as you won’t be using a container in this lab.
 
 ### Verify the Environment Setup
 
@@ -65,8 +58,8 @@ All required Azure services including **Azure AI Search with pre-indexed data** 
 
 **What's Pre-Configured:**
 - **Azure AI Search** - Standard tier with two pre-created indexes:
-  - **hrdocs (50 documents):** HR policies, employee handbook, role library, company overview
-  - **healthdocs (334 documents):** Health insurance plans, benefits options, coverage details
+  - **hrdocs:** HR policies, employee handbook, role library, company overview
+  - **healthdocs:** Health insurance plans, benefits options, coverage details
 - **Azure OpenAI** - Deployed models **gpt-4.1** for chat completion and answer synthesis and **text-embedding-3-large** for vector embeddings
 - **Pre-computed vectors** - All 384 documents are already vectorized and indexed
 
@@ -93,23 +86,25 @@ Let's confirm that the search indexes have been created successfully:
 
 > **✅ Checkpoint:** If you see both indexes with document counts, your environment is ready! If the indexes are missing or empty, please notify your instructor.
 
-If your indexes are present and populated, your environment is ready to use. You can now proceed to open the Jupyter Notebook.
+If your indexes are present and populated, your environment is ready to use. You can now proceed to start with the Jupyter Notebooks.
 
-### Open the Jupyter Notebook
+### Start with Jupyter Notebooks
 
-1. Navigate to the **notebook** folder.  
-2. Open **lab511-agentic-knowledge-bases.ipynb**.
+This lab includes 8 progressive notebooks covering different knowledge base patterns:
 
-The notebook is organized into progressive sections, each building toward a fully functional Knowledge Agent. You'll explore:
+1. **Basic Knowledge Base** - Connect indexed data, configure Azure OpenAI, generate cited answers
+2. **Multiple Knowledge Sources** - Query across indexes with custom instructions
+3. **SharePoint Integration** - Real-time document retrieval from SharePoint
+4. **Web Sources** - Combine internal and external content
+5. **Blob Storage** - Upload and index with minimal vs. semantic strategies
+6. **Combined Sources** - Unified querying across multiple source types
+7. **Minimal Reasoning** - Speed-optimized retrieval
+8. **Medium Reasoning** - Balanced query decomposition
 
-- **Knowledge Sources** - Connecting to pre-indexed search collections
-- **Knowledge Base Creation** - Configuring the orchestration layer with Azure OpenAI
-- **Agentic Retrieval** - Query decomposition, multi-source search, and semantic reranking
-- **Answer Synthesis** - Generating grounded responses with citations
-- **Activity Inspection** - Understanding the agent's reasoning process
+**Start with `part1-basic-knowledge-base.ipynb`** in the `notebooks/` folder and progress through each notebook sequentially.
 
-### Start Building Your Agentic Knowledge Base
+### Complete the Lab
 
-All guided content and hands-on steps for this lab are contained inside the **lab511-agentic-knowledge-bases.ipynb** notebook. **Begin your work directly in the Jupyter Notebook.** Follow the guided sections in order, executing the provided code cells and reviewing the explanations along the way.
+Work through each notebook in order, starting with `part1-basic-knowledge-base.ipynb`. Each notebook explores a different knowledge base pattern and builds on concepts from previous parts.
 
-Once you’ve completed the full notebook experience and built your Agentic Knowledge Base, return to this page and select **Next >** to view the summary page, where you’ll review key takeaways, architectural patterns, and recommended next steps for applying what you’ve learned.
+Once you've completed all 8 notebooks, select **Next** to review key takeaways and next steps.
